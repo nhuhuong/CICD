@@ -1,0 +1,42 @@
+name: Rose Test
+on: 
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select environment to run tests against'
+        required: true
+        default: 'test'
+        type: choice
+        options:
+          - test
+          - production
+      test_tags: 
+        description: 'Comma-separated list of test tags to run (e.g. @smoke,@regression)'
+        required: true
+        type: string
+        default: 'smoke'
+
+jobs: 
+  execute-tests:
+    name: Execute Playwright Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Set up environment variables
+        run: |
+          echo "ENVIRONMENT=${{ github.event.inputs.environment }}" >> $GITHUB_ENV
+          echo "TEST_TAGS=${{ github.event.inputs.test_tags }}" >> $GITHUB_ENV
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run Playwright tests
+        run: npx playwright test --project=chromium --grep "${{ github.event.inputs.test_tags }}"
+        env:
+          ENVIRONMENT: ${{ github.event.inputs.environment }}

@@ -1,0 +1,29 @@
+{
+  "name": "proposaly-automation",
+  "version": "1.0.0",
+  "description": "Proposaly automation tests using Playwright and POM pattern",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:chrome": "playwright test --project=chromium",
+    "test:firefox": "playwright test --project=firefox",
+    "test:webkit": "playwright test --project=webkit",
+    "test:ui": "playwright test --ui",
+    "show-report": "playwright show-report"
+  },
+  "keywords": [
+    "automation",
+    "testing",
+    "playwright",
+    "typescript",
+    "pom"
+  ],
+  "author": "Senior QA",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "@types/node": "^20.19.39",
+    "typescript": "^5.3.3"
+  }
+}
