@@ -1,0 +1,7 @@
+userName: huongtran_fIthzd
+accessKey: 7Ljq7yLMuksKLVmWLmQC
+platforms:
+  - os: Mac
+    osVersion: Sonoma
+    browserName: chrome
+    browserVersion: latest

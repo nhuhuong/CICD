@@ -10,6 +10,7 @@
     "test:firefox": "playwright test --project=firefox",
     "test:webkit": "playwright test --project=webkit",
     "test:ui": "playwright test --ui",
+    "test:browserstack": "BROWSERSTACK_USERNAME=huongtran_fIthzd BROWSERSTACK_ACCESS_KEY=7Ljq7yLMuksKLVmWLmQC playwright test --config=browserstack.config.ts",
     "show-report": "playwright show-report"
   },
   "keywords": [

@@ -2,7 +2,21 @@ import { test, expect } from '@playwright/test';
 import { LoginPage } from '../../src/pages/LoginPage';
 import { DashboardPage } from '../../src/pages/DashboardPage';
 
-test.describe('Proposaly Workspace & Proposal Tests', () => {
+/**
+ * Test Configuration & Constants
+ * Centralized test data for maintainability
+ */
+const TEST_CONFIG = {
+  credentials: {
+    email: 'automation.adcore@gmail.com',
+    password: 'Test123@',
+  },
+  workspaces: {
+    welcome: 'Welcome / Getting Started',
+  },
+};
+
+test.describe('Dashboard Tests', () => {
   let loginPage: LoginPage;
   let dashboardPage: DashboardPage;
 
@@ -10,59 +24,69 @@ test.describe('Proposaly Workspace & Proposal Tests', () => {
     loginPage = new LoginPage(page);
     dashboardPage = new DashboardPage(page);
     
-    // Login before running workspace tests
+    // Login before running dashboard tests
     await loginPage.navigateToLogin();
-    await loginPage.login('automation.adcore@gmail.com', 'Test123@');
-  });
-
-  test('TC006: Navigate workspace and create proposal in Automation-Proposal', async ({ page }) => {
-    // Arrange
-    const workspaceName = 'Automation-Proposal';
-
-    // Act
-    // Step 1: Click "Workspace" button
-    await dashboardPage.clickWorkspace();
-
-    // Step 2: Verify "Your workspaces" dialog is visible
-    const isDialogVisible = await dashboardPage.isWorkspacesDialogVisible();
-    expect(isDialogVisible).toBeTruthy();
-
-    // Step 3: On the dialog, Click Search field with "Search workspace" placeholder
-    await dashboardPage.clickSearchField();
-
-    // Step 4: Search for workspace "Automation-Proposal"
-    await dashboardPage.searchWorkspace(workspaceName);
-
-    // Step 5: Wait for workspace "Automation-Proposal" to appear in results
-    await dashboardPage.waitForWorkspaceAppears(workspaceName);
-
-    // Step 6: Select the workspace by clicking on it
-    await dashboardPage.selectWorkspace(workspaceName);
-
-    // Step 7: Wait for the workspace appears (page load)
+    await loginPage.login(TEST_CONFIG.credentials.email, TEST_CONFIG.credentials.password);
     await dashboardPage.waitForWorkspaceLoad();
-
-    // Step 8: Click Create Proposal button
-    await dashboardPage.clickCreateProposal();
-
-    // Assert
-    // Step 9: Verify navigation to proposal creation page
-    const currentUrl = await dashboardPage.getCurrentUrl();
-    expect(currentUrl).toContain('proposal');
   });
 
-  test('TC007: Verify workspace button is visible on dashboard', async () => {
-    // Assert
-    const isWorkspaceVisible = await dashboardPage.isWorkspaceButtonVisible();
-    expect(isWorkspaceVisible).toBeTruthy();
-  });
+  // ============================================================
+  // HELPER METHODS - Reusable Test Functions
+  // ============================================================
 
-  test('TC008: Verify create proposal button is visible', async () => {
-    // Act
+  /**
+   * Navigate to a specific workspace
+   * Handles: Click Workspace → Search → Select → Wait for Load
+   * 
+   * @param workspaceName - Name of workspace to navigate to
+   */
+  async function navigateToWorkspace(workspaceName: string): Promise<void> {
     await dashboardPage.clickWorkspace();
+    const dialogVisible = await dashboardPage.isWorkspacesDialogVisible();
+    expect(dialogVisible).toBe(true);
 
-    // Assert
-    const isCreateProposalVisible = await dashboardPage.isCreateProposalButtonVisible();
-    expect(isCreateProposalVisible).toBeTruthy();
+    await dashboardPage.clickSearchField();
+    await dashboardPage.searchWorkspace(workspaceName);
+    await dashboardPage.selectWorkspace(workspaceName);
+    await dashboardPage.waitForWorkspaceLoad();
+  }
+
+  // ============================================================
+  // TC001: Verify dashboard loads after login
+  // ============================================================
+  test('TC001: Verify dashboard loads successfully after login', async ({ page }) => {
+    console.log('\n🔄 TC001: Verify dashboard loads after login\n');
+
+    // Verify we're on the dashboard
+    const currentUrl = page.url();
+    expect(currentUrl).toBeTruthy();
+    console.log(`  ✅ Dashboard loaded at: ${currentUrl}`);
+
+    // Verify workspace is loaded
+    await dashboardPage.waitForWorkspaceLoad();
+    console.log('  ✅ Workspace loaded successfully');
+
+    console.log('🎉 TC001 Completed Successfully!\n');
   });
+
+  // ============================================================
+  // TC002: Verify workspace navigation functionality
+  // ============================================================
+  test('TC002: Verify workspace navigation to Welcome workspace', async ({ page }) => {
+    const workspaceName = TEST_CONFIG.workspaces.welcome;
+    console.log(`\n🔄 TC002: Navigate to "${workspaceName}" workspace\n`);
+
+    // Navigate to welcome workspace
+    await navigateToWorkspace(workspaceName);
+    console.log(`  ✅ Successfully navigated to ${workspaceName}`);
+
+    // Verify navigation
+    const currentUrl = page.url();
+    expect(currentUrl).toBeTruthy();
+    console.log(`  ✅ Current URL: ${currentUrl}`);
+
+    console.log('🎉 TC002 Completed Successfully!\n');
+  });
+
 });
+

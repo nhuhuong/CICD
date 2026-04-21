@@ -25,6 +25,24 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'BrowserStack Chrome',
+      use: {
+        browserName: 'chromium',
+        connectOptions: {
+          wsEndpoint: `wss://huongtran_fIthzd:7Ljq7yLMuksKLVmWLmQC@cdp.browserstack.com/playwright?caps=${encodeURIComponent(JSON.stringify({
+            browser: 'chrome',
+            browser_version: 'latest',
+            os: 'OS X',
+            os_version: 'Sonoma',
+            name: 'My Playwright Test',
+            build: 'build-1',
+            'browserstack.debug': true,
+            'browserstack.networkLogs': true,
+          }))}`
+        }
+      }
     }
   ],
   webServer: undefined,
