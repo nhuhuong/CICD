@@ -156,3 +156,4 @@ Create a new spec file in `tests/specs/` and follow the AAA pattern (Arrange, Ac
 - **Timeouts**: Increase timeout in `playwright.config.ts` or specific tests
 - **Cross-browser issues**: Test on multiple browsers using npm run scripts
 - **Network errors**: Check if test app URL is accessible and stable
+# proposaly-web-automation
